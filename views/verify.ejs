@@ -74,6 +74,12 @@
 
           <!-- BLOCKCHAIN STATUS -->
           <div id="blockchainStatus" class="ns-stb loading" style="display:none; margin-top: 1rem;"></div>
+
+          <% if (!result.valid && preFetched) { %>
+            <a href="/evidence/retrieve/<%= preFetched._id %>" class="ns-sub--gold" style="margin-top: 2rem;">
+              🔒 Fetch Original Evidence
+            </a>
+            <% } %>
           <% } %>
 
       </div>

@@ -2,9 +2,8 @@
 
 > **The Future of Digital Evidence Management.**
 > A Blockchain-powered, Sci-Fi themed, tamper-proof system for the Indian Judiciary.
-
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Vercel](https://img.shields.io/badge/deploy-on%20vercel-black.svg)](https://vercel.com/new)
+[![Deploy](https://img.shields.io/badge/deploy-on%20render-46E3B7?logo=render&logoColor=white)](https://nyaya-setu-kjga.onrender.com/)
 
 ## 🌌 OVERVIEW
 

@@ -74,7 +74,7 @@ const connectDB = async () => {
   }
 };
 
-console.log("MONGO_URI:", process.env.MONGO_URI);
+
 connectDB();
 
 

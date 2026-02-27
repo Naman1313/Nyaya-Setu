@@ -47,19 +47,21 @@ function initClock() {
 }
 
 // --- File Upload Logic (Visual) ---
+// --- File Upload Logic (Visual) ---
 function initFileUpload() {
   const fileInputs = document.querySelectorAll('input[type="file"]');
   fileInputs.forEach(input => {
     input.addEventListener('change', (e) => {
-        const fileName = e.target.files[0]?.name || "No file selected";
-        const statusEl = e.target.parentElement.querySelector('.ns-fw-st');
-        if (statusEl) {
-            statusEl.textContent = fileName;
-        }
+      const files = e.target.files;
+      const statusEl = e.target.parentElement.querySelector('.ns-fw-st');
+      if (statusEl) {
+        statusEl.textContent = files.length === 1 
+          ? files[0].name 
+          : `${files.length} files selected`;
+      }
     });
   });
 }
-
 // --- Navigation Logic (SPA-like feel for Landing) ---
 function showSection(sectionId) {
     // Hide all main pages

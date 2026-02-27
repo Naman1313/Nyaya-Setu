@@ -15,7 +15,7 @@
         🦊 Connect MetaMask
       </button>
 
-      <form id="uploadForm">
+      <form id="uploadForm" enctype="multipart/form-data">
         <input type="text" class="ns-fi" name="caseId" placeholder="Case Reference Number (e.g., CAS-2026-001)" required>
         <input type="text" class="ns-fi" name="officerId" placeholder="Investigating Officer Badge ID" required>
 
@@ -24,9 +24,9 @@
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
             <polyline points="14 2 14 8 20 8" />
           </svg>
-          <span class="ns-fw-lb">Choose Evidence File...</span>
+          <span class="ns-fw-lb">Choose Evidence File(s)...</span>
           <span class="ns-fw-st" style="margin-left: auto;">No file selected</span>
-          <input type="file" name="file" required onchange="this.previousElementSibling.innerText = this.files[0].name">
+          <input type="file" name="files" multiple required >
         </label>
 
         <button type="submit" id="submitBtn" class="ns-sub">Upload to IPFS & Blockchain</button>

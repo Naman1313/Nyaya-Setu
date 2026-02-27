@@ -13,9 +13,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const router = express.Router();
+
+// Changed: upload.array to accept multiple files (up to 20)
 const upload = multer({ dest: path.join(__dirname, '../uploads') });
 
-router.get('/verify', isloggedin,isJudge, async (req, res) => {
+// GET: unchanged — still uses ?id= query param for pre-fill
+router.get('/verify', isloggedin, isJudge, async (req, res) => {
   const { id } = req.query;
   let preFetchedData = null;
 
@@ -23,50 +26,79 @@ router.get('/verify', isloggedin,isJudge, async (req, res) => {
     preFetchedData = await Evidence.findById(id);
   }
 
-  res.render('verify', { result: null, preFetched: preFetchedData });
+  res.render('verify', { result: null, results: null, preFetched: preFetchedData });
 });
 
-router.post(['/verify', '/verify/:id'], isloggedin,isJudge, upload.single('file'), async (req, res) => {
+// POST: now handles multiple files, returns results array
+router.post(['/verify', '/verify/:id'], isloggedin, isJudge, upload.array('files', 20), async (req, res) => {
   try {
     const { id } = req.params;
     const { caseId } = req.body;
 
-    if (!req.file) {
-      return res.status(400).send('Please upload a file to verify.');
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).send('Please upload at least one file to verify.');
     }
 
-    const fileBuffer = fs.readFileSync(req.file.path);
-    const currentHash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
+    const results = [];
 
+    for (const file of req.files) {
+      try {
+        const fileBuffer = fs.readFileSync(file.path);
+        const currentHash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
 
-    let originalRecord;
-    if (id && mongoose.Types.ObjectId.isValid(id)) {
- 
-      originalRecord = await Evidence.findById(id);
-    } else {
- 
-      originalRecord = await Evidence.findOne({ caseId: caseId });
+        // Same lookup logic as your original — by id if available, else by caseId + fileName
+        let originalRecord;
+        if (id && mongoose.Types.ObjectId.isValid(id)) {
+          originalRecord = await Evidence.findById(id);
+        } else {
+          originalRecord = await Evidence.findOne({
+            caseId: caseId,
+            fileName: file.originalname
+          });
+        }
+
+        const isValid = originalRecord && originalRecord.fileHash === currentHash;
+
+        fs.unlinkSync(file.path);
+
+        results.push({
+          fileName: file.originalname,
+          valid: isValid,
+          currentHash,
+          originalHash: originalRecord ? originalRecord.fileHash : null,
+          evidenceId: originalRecord ? originalRecord._id.toString() : null,
+          error: !originalRecord ? 'No DB record found for this file.' : null
+        });
+
+      } catch (fileErr) {
+        // Clean up temp file if still around
+        if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+
+        results.push({
+          fileName: file.originalname,
+          valid: false,
+          currentHash: '',
+          originalHash: null,
+          evidenceId: null,
+          error: fileErr.message
+        });
+      }
     }
 
-   
-    const isValid = (originalRecord && originalRecord.fileHash === currentHash);
+    // preFetched: use the DB record from first matched result, or fall back to { caseId }
+    const firstMatch = results.find(r => r.evidenceId);
+    const preFetched = firstMatch
+      ? await Evidence.findById(firstMatch.evidenceId)
+      : { caseId };
 
-    fs.unlinkSync(req.file.path);
-      
-
-  
     res.render('verify', {
-      result: {
-        valid: isValid,
-        currentHash: currentHash,
-        originalHash: originalRecord ? originalRecord.fileHash : null
-      },
-      preFetched: originalRecord || { caseId }
+      result: null,     // kept so existing ejs fallback block doesn't crash
+      results,
+      preFetched
     });
 
   } catch (error) {
     console.error("Verification Error:", error);
- 
     res.status(500).send("Verification failed.");
   }
 });

@@ -39,10 +39,10 @@ const IV_LENGTH = 16; // AES standard
 
 // --- HELPER: Encrypt File for Vault ---
 function encryptBuffer(buffer) {
-  const iv = crypto.randomBytes(IV_LENGTH); // Create a unique lock
+  const iv = crypto.randomBytes(IV_LENGTH);
   const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
   let encrypted = Buffer.concat([cipher.update(buffer), cipher.final()]);
-  return Buffer.concat([iv, encrypted]); // Save the lock with the file
+  return Buffer.concat([iv, encrypted]);
 }
 
 // --- HELPER: Decrypt File from Vault ---
@@ -54,10 +54,83 @@ function decryptBuffer(encryptedBuffer) {
   return decrypted;
 }
 
+// --- HELPER: Process and store a single file across all 3 layers ---
+async function processSingleFile(file, caseId, officerId) {
+  const fileBuffer = fs.readFileSync(file.path);
+  const fileHash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
+
+  // --- LAYER 1: IPFS Upload ---
+  console.log(`  [${file.originalname}] Uploading to Layer 1 (IPFS)...`);
+  const readableStream = fs.createReadStream(file.path);
+  const pinataOptions = {
+    pinataMetadata: {
+      name: file.originalname,
+      keyvalues: { caseId, officerId }
+    },
+    pinataOptions: { cidVersion: 1 }
+  };
+  const pinataResult = await pinata.pinFileToIPFS(readableStream, pinataOptions);
+  const ipfsCID = pinataResult.IpfsHash;
+
+  // --- LAYER 2: AWS S3 Upload ---
+  console.log(`  [${file.originalname}] Uploading to Layer 2 (AWS S3)...`);
+  const s3Key = `${caseId}/${Date.now()}_${file.originalname}`;
+
+  const retentionDate = new Date();
+  retentionDate.setFullYear(retentionDate.getFullYear() + 10);
+
+  const s3Params = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: s3Key,
+    Body: fileBuffer,
+    ContentType: file.mimetype,
+    // ObjectLockMode: 'COMPLIANCE',
+    // ObjectLockRetainUntilDate: retentionDate
+  };
+
+  try {
+    await s3.upload(s3Params).promise();
+  } catch (s3Err) {
+    console.error(`  [${file.originalname}] AWS Upload Error:`, s3Err.message);
+  }
+
+  // --- LAYER 3: Local Encrypted Vault ---
+  console.log(`  [${file.originalname}] Writing to Layer 3 (Local Encrypted Vault)...`);
+  const encryptedData = encryptBuffer(fileBuffer);
+  const vaultFilename = `${caseId}_${Date.now()}_${file.originalname}.enc`;
+  const localPath = path.join(__dirname, '../vault', vaultFilename);
+  fs.writeFileSync(localPath, encryptedData.toString('base64'));
+
+  // --- SAVE TO DATABASE ---
+  const newEvidence = await Evidence.create({
+    caseId,
+    officerId,
+    fileName: file.originalname,
+    fileHash,
+    ipfsCID,
+    awsKey: s3Key,
+    localEncryptedPath: localPath,
+    originalFileType: file.mimetype,
+    blockchainTxHash: 'PENDING_SIGNATURE'
+  });
+
+  // Clean up temp file
+  fs.unlinkSync(file.path);
+
+  console.log(`  ✅ [${file.originalname}] Secured across 3 layers.`);
+
+  return {
+    dbId: newEvidence._id,
+    fileName: file.originalname,
+    fileHash,
+  };
+}
+
 // --- ROUTE: Show Evidence Page ---
 router.get('/evidence', isloggedin, async (req, res) => {
   try {
     const allEvidence = await Evidence.find({});
+
     res.render('show', { evidences: allEvidence });
   } catch (error) {
     console.error("Error:", error);
@@ -65,92 +138,47 @@ router.get('/evidence', isloggedin, async (req, res) => {
   }
 });
 
-// --- ROUTE: The 3-Layer Upload ---
-router.post('/evidence/upload-api', isloggedin, upload.single('file'), async (req, res) => {
+// --- ROUTE: The 3-Layer Multi-File Upload ---
+// Accepts up to 20 files at once via the field name "files"
+router.post('/evidence/upload-api', isloggedin, upload.array('files', 20), async (req, res) => {
   try {
     const { caseId, officerId } = req.body;
 
-    if (!req.file) {
-      return res.status(400).json({ success: false, error: 'No file found' });
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, error: 'No files found' });
     }
 
-    console.log(`🔒 Starting Multi-Layer Storage for Case: ${caseId}`);
+    console.log(`🔒 Starting Multi-Layer Storage for Case: ${caseId} | Files: ${req.files.length}`);
 
-    // Read the file into memory
-    const fileBuffer = fs.readFileSync(req.file.path);
-    const fileHash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
+    const results = [];
+    const errors = [];
 
-    // --- LAYER 1: IPFS Upload ---
-    console.log("... Uploading to Layer 1 (IPFS)");
-    const readableStream = fs.createReadStream(req.file.path);
-    const pinataOptions = {
-      pinataMetadata: {
-        name: req.file.originalname,
-        keyvalues: { caseId, officerId }
-      },
-      pinataOptions: { cidVersion: 1 }
-    };
-    const pinataResult = await pinata.pinFileToIPFS(readableStream, pinataOptions);
-    const ipfsCID = pinataResult.IpfsHash;
+    // Process each file one by one
+    for (const file of req.files) {
+      try {
+        console.log(`\n📄 Processing: ${file.originalname}`);
+        const result = await processSingleFile(file, caseId, officerId);
+        results.push(result);
+      } catch (fileErr) {
+        console.error(`❌ Failed to process ${file.originalname}:`, fileErr.message);
+        errors.push({ fileName: file.originalname, error: fileErr.message });
 
-    // --- LAYER 2: AWS S3 Upload ---
-    console.log("... Uploading to Layer 2 (AWS S3)");
-    const s3Key = `${caseId}/${Date.now()}_${req.file.originalname}`;
-    
-    // Define 10-year retention for Court Compliance
-    const retentionDate = new Date();
-    retentionDate.setFullYear(retentionDate.getFullYear() + 10);
-
-    const s3Params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: s3Key,
-      Body: fileBuffer,
-      ContentType: req.file.mimetype,
-      // NOTE: Uncomment these two lines ONLY if your AWS Bucket has Object Lock enabled
-      // ObjectLockMode: 'COMPLIANCE', 
-      // ObjectLockRetainUntilDate: retentionDate
-    };
-    
-    // Upload to AWS
-    try {
-        await s3.upload(s3Params).promise();
-    } catch (s3Err) {
-        console.error("AWS Upload Error (Check your .env keys):", s3Err.message);
-        // We continue even if AWS fails, to not break the demo, but log the error.
+        // Clean up temp file if it still exists
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+      }
     }
 
-    // --- LAYER 3: Local Encrypted Vault ---
-    console.log("... Writing to Layer 3 (Local Encrypted Vault)");
-    const encryptedData = encryptBuffer(fileBuffer);
-    const vaultFilename = `${caseId}_${Date.now()}.enc`;
-    // This saves the file into the 'vault' folder we created earlier
-    const localPath = path.join(__dirname, '../vault', vaultFilename);
-    
-    fs.writeFileSync(localPath, encryptedData.toString('base64'));
-
-    // --- SAVE TO DATABASE ---
-    const newEvidence = await Evidence.create({
-      caseId,
-      officerId,
-      fileName: req.file.originalname,
-      fileHash,
-      ipfsCID,
-      awsKey: s3Key,
-      localEncryptedPath: localPath,
-      originalFileType: req.file.mimetype,
-      blockchainTxHash: 'PENDING_SIGNATURE'
-    });
-
-    // Clean up the temporary upload file
-    fs.unlinkSync(req.file.path);
-
-    console.log("✅ Evidence secured across 3 layers.");
+    console.log(`\n✅ Done. ${results.length} succeeded, ${errors.length} failed.`);
 
     res.json({
       success: true,
-      dbId: newEvidence._id,
-      fileHash: fileHash,
-      caseId: caseId
+      totalUploaded: results.length,
+      totalFailed: errors.length,
+      caseId,
+      uploaded: results,
+      ...(errors.length > 0 && { errors }),
     });
 
   } catch (error) {
@@ -160,18 +188,32 @@ router.post('/evidence/upload-api', isloggedin, upload.single('file'), async (re
 });
 
 // --- ROUTE: Confirm Blockchain Transaction ---
-router.post('/evidence/confirm-tx',isloggedin, async (req, res) => {
+// Accepts either a single dbId or an array of dbIds with their txHashes
+router.post('/evidence/confirm-tx', isloggedin, async (req, res) => {
   try {
-    const { dbId, txHash } = req.body;
-    await Evidence.findByIdAndUpdate(dbId, { blockchainTxHash: txHash });
-    res.json({ success: true });
+    const { transactions } = req.body;
+    // transactions: [{ dbId, txHash }, ...]
+
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+      // Fallback: support legacy single transaction format
+      const { dbId, txHash } = req.body;
+      await Evidence.findByIdAndUpdate(dbId, { blockchainTxHash: txHash });
+      return res.json({ success: true });
+    }
+
+    const updates = transactions.map(({ dbId, txHash }) =>
+      Evidence.findByIdAndUpdate(dbId, { blockchainTxHash: txHash })
+    );
+    await Promise.all(updates);
+
+    res.json({ success: true, updated: transactions.length });
   } catch (error) {
     res.status(500).json({ success: false });
   }
 });
 
 // --- ROUTE: Retrieve Evidence (The Safety Net) ---
-router.get('/evidence/retrieve/:id', isloggedin,async (req, res) => {
+router.get('/evidence/retrieve/:id', isloggedin, async (req, res) => {
   try {
     const evidence = await Evidence.findById(req.params.id);
     if (!evidence) return res.status(404).send("Not found.");
@@ -185,7 +227,6 @@ router.get('/evidence/retrieve/:id', isloggedin,async (req, res) => {
       const gatewayUrl = `https://gateway.pinata.cloud/ipfs/${evidence.ipfsCID}`;
       const response = await fetch(gatewayUrl);
       if (!response.ok) throw new Error("IPFS Gateway Error");
-      
       const arrayBuffer = await response.arrayBuffer();
       fileBuffer = Buffer.from(arrayBuffer);
       console.log("✔ Retrieved from IPFS");
@@ -193,7 +234,7 @@ router.get('/evidence/retrieve/:id', isloggedin,async (req, res) => {
       console.warn("⚠ Layer 1 Failed. Moving to Layer 2...");
     }
 
-    // --- ATTEMPT 2: Try AWS S3 (If IPFS failed) ---
+    // --- ATTEMPT 2: Try AWS S3 ---
     if (!fileBuffer) {
       try {
         console.log("... Attempting Layer 2 (AWS S3)");
@@ -209,15 +250,13 @@ router.get('/evidence/retrieve/:id', isloggedin,async (req, res) => {
       }
     }
 
-    // --- ATTEMPT 3: Try Local Vault (If AWS failed) ---
+    // --- ATTEMPT 3: Try Local Vault ---
     if (!fileBuffer) {
       try {
         console.log("... Attempting Layer 3 (Local Vault)");
         if (fs.existsSync(evidence.localEncryptedPath)) {
-          // Read the encrypted file
           const encryptedBase64 = fs.readFileSync(evidence.localEncryptedPath, 'utf8');
           const encryptedBuffer = Buffer.from(encryptedBase64, 'base64');
-          // Decrypt it
           fileBuffer = decryptBuffer(encryptedBuffer);
           console.log("✔ Retrieved & Decrypted from Local Vault");
         } else {
@@ -229,7 +268,6 @@ router.get('/evidence/retrieve/:id', isloggedin,async (req, res) => {
       }
     }
 
-    // Send the retrieved file to the user
     if (fileBuffer) {
       res.setHeader("Content-Disposition", `attachment; filename="${evidence.fileName}"`);
       res.setHeader("Content-Type", evidence.originalFileType);

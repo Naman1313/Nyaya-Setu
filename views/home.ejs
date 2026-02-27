@@ -1,0 +1,586 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Stars Background -->
+<div class="ns-stars" id="stars"></div>
+<div class="ns-amb"></div>
+
+<div class="ns-page">
+
+  <!-- HERO SECTION -->
+  <section class="ns-hero">
+    <div class="ns-hero-glow ns-hero-glow--c"></div>
+    <div class="ns-hero-glow ns-hero-glow--g"></div>
+
+    <div class="ns-hero-inner">
+
+      <div class="ns-hero-badge">
+        <span class="ns-hero-badge-dot"></span>
+        LIVE ON SEPOLIA TESTNET
+      </div>
+
+      <h1 class="ns-hero-title">
+        NYAYA<span class="ns-hero-title-sep">—</span><span class="ns-hero-title-hl">SETU</span>
+      </h1>
+      <p class="ns-hero-sub">IMMUTABLE EVIDENCE LOCKER</p>
+
+      <p class="ns-hero-desc">
+        A <em>tamper-proof</em>, blockchain-anchored digital evidence management system.<br>
+        Every file sealed. Every hash permanent. Every truth preserved.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="ns-hero-ctas">
+        <% if (currentUser) { %>
+          <a href="/police" class="ns-cta ns-cta--primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Police Dashboard
+          </a>
+          <a href="/verify" class="ns-cta ns-cta--primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+            Verify Evidence
+          </a>
+        <% } else { %>
+          <a href="/login?role=officer" class="ns-cta ns-cta--primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Officer Login
+          </a>
+          <a href="/login?role=judge" class="ns-cta ns-cta--primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6l9-4 9 4v6c0 5.25-3.75 10.15-9 11.5C6.75 22.15 3 17.25 3 12V6z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Judge Login
+          </a>
+        <% } %>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="ns-hero-stats">
+        <div class="ns-hero-stat">
+          <span class="ns-hero-stat-num">SHA-256</span>
+          <span class="ns-hero-stat-lbl">Hashing Engine</span>
+        </div>
+        <div class="ns-hero-stat-div"></div>
+        <div class="ns-hero-stat">
+          <span class="ns-hero-stat-num">IPFS</span>
+          <span class="ns-hero-stat-lbl">Decentralized Vault</span>
+        </div>
+        <div class="ns-hero-stat-div"></div>
+        <div class="ns-hero-stat">
+          <span class="ns-hero-stat-num">S-65B</span>
+          <span class="ns-hero-stat-lbl">Legal Compliance</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WHY NYAYA-SETU -->
+  <section class="ns-why">
+    <div class="ns-why-inner">
+      <div class="ns-why-header">
+        <span class="ns-about-label">THE PROBLEM</span>
+        <h2 class="ns-about-sec-title">INDIA'S TRUST DEFICIT IN DIGITAL EVIDENCE</h2>
+        <p class="ns-about-sec-desc">A broken chain of custody is costing justice — here's why it must change.</p>
+      </div>
+
+      <div class="ns-why-grid">
+
+        <div class="ns-why-card">
+          <div class="ns-why-icon ns-why-icon--danger">
+            <svg width="26" height="26" fill="none" stroke="var(--danger)" stroke-width="1.5" viewBox="0 0 24 24">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <h3 class="ns-why-title">Single Point of Failure</h3>
+          <p class="ns-why-desc">Traditional centralized servers can be breached. Corrupt insiders can swap or delete evidence files before trial — with zero trace and zero accountability.</p>
+        </div>
+
+        <div class="ns-why-card">
+          <div class="ns-why-icon ns-why-icon--danger">
+            <svg width="26" height="26" fill="none" stroke="var(--danger)" stroke-width="1.5" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h3 class="ns-why-title">1–30% Conviction Rate</h3>
+          <p class="ns-why-desc">NCRB data shows cybercrime convictions hover at a staggering 1–30% in major cities — primarily because digital evidence gets successfully challenged or deemed inadmissible in court.</p>
+        </div>
+
+        <div class="ns-why-card">
+          <div class="ns-why-icon ns-why-icon--danger">
+            <svg width="26" height="26" fill="none" stroke="var(--danger)" stroke-width="1.5" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <h3 class="ns-why-title">2+ Year FSL Backlog</h3>
+          <p class="ns-why-desc">Forensic Science Labs are overwhelmed with routine authentication tasks, causing multi-year delays that keep undertrials in jail long before any verdict is reached.</p>
+        </div>
+
+        <!-- NEW: Corruption card -->
+        <div class="ns-why-card ns-why-card--corrupt">
+          <div class="ns-why-icon ns-why-icon--corrupt">
+            <svg width="26" height="26" fill="none" stroke="#f59e0b" stroke-width="1.5" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="3"/>
+              <path d="M6.5 20h11l-1.5-6H8L6.5 20z"/>
+              <path d="M12 11v3M9 14h6"/>
+              <path d="M3 9l2-2M21 9l-2-2M3 15l2 2M21 15l-2 2"/>
+            </svg>
+          </div>
+          <h3 class="ns-why-title ns-why-title--corrupt">Money Can't Buy Truth</h3>
+          <p class="ns-why-desc">Wealthy accused can <em class="corrupt-em">bribe officers to swap files</em>, <em class="corrupt-em">pressure judges</em>, or pay to have evidence quietly deleted from central servers before trial. Human honesty is not a security model.</p>
+          <div class="ns-why-corrupt-tag">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Blockchain removes this attack vector entirely
+          </div>
+        </div>
+
+        <div class="ns-why-card">
+          <div class="ns-why-icon ns-why-icon--danger">
+            <svg width="26" height="26" fill="none" stroke="var(--danger)" stroke-width="1.5" viewBox="0 0 24 24">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <h3 class="ns-why-title">The Deepfake Threat</h3>
+          <p class="ns-why-desc">With AI tools, fabricating convincing video or audio evidence is now trivial. We need a way to prove a file hasn't changed by even one byte since the moment of seizure.</p>
+        </div>
+
+        <div class="ns-why-card ns-why-card--solution">
+          <div class="ns-why-icon ns-why-icon--gr">
+            <svg width="26" height="26" fill="none" stroke="var(--e4)" stroke-width="1.5" viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="ns-why-title ns-why-title--gr">Nyaya-Setu Solves This</h3>
+          <p class="ns-why-desc">By anchoring every file's SHA-256 hash on the Sepolia blockchain and storing the original on IPFS, we make tampering <em>mathematically impossible</em> — not just policy-restricted.</p>
+          <a href="/dashboard" class="ns-why-learn-more">
+            Learn how it works
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="ns-how">
+    <div class="ns-how-inner">
+      <div class="ns-how-header">
+        <span class="ns-about-label">PROTOCOL</span>
+        <h2 class="ns-about-sec-title">3-STEP VERIFICATION ENGINE</h2>
+        <p class="ns-about-sec-desc">From seizure to court — a mathematically tamper-proof chain of custody.</p>
+      </div>
+
+      <div class="ns-steps">
+
+        <div class="ns-step">
+          <div class="ns-step-num">01</div>
+          <div class="ns-step-body">
+            <div class="ns-step-icon">
+              <svg width="24" height="24" fill="none" stroke="var(--c4)" stroke-width="1.5" viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <h3 class="ns-step-title">UPLOAD & HASH</h3>
+            <p class="ns-step-desc">Officer uploads evidence. System generates SHA-256 fingerprint and pins the file to IPFS via Pinata.</p>
+          </div>
+        </div>
+
+        <div class="ns-step-arrow">
+          <svg width="24" height="24" fill="none" stroke="rgba(0,210,230,0.4)" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+
+        <div class="ns-step">
+          <div class="ns-step-num">02</div>
+          <div class="ns-step-body">
+            <div class="ns-step-icon">
+              <svg width="24" height="24" fill="none" stroke="var(--c4)" stroke-width="1.5" viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <h3 class="ns-step-title">IMMUTABLE SEAL</h3>
+            <p class="ns-step-desc">Officer signs via MetaMask. Hash + Case ID written to Solidity smart contract on Sepolia — permanent and timestamped.</p>
+          </div>
+        </div>
+
+        <div class="ns-step-arrow">
+          <svg width="24" height="24" fill="none" stroke="rgba(0,210,230,0.4)" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+
+        <div class="ns-step">
+          <div class="ns-step-num">03</div>
+          <div class="ns-step-body">
+            <div class="ns-step-icon">
+              <svg width="24" height="24" fill="none" stroke="var(--e4)" stroke-width="1.5" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4"/>
+                <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/>
+              </svg>
+            </div>
+            <h3 class="ns-step-title">INSTANT VERIFY</h3>
+            <p class="ns-step-desc">Judge uploads file. System recalculates hash and compares with blockchain. Match = admissible. Mismatch = fetch Golden Copy.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="text-align:center; margin-top: 2.5rem;">
+        <a href="/index" class="ns-cta ns-cta--primary" style="display:inline-flex;">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Explore the Full Protocol
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="ns-testi">
+    <div class="ns-testi-inner">
+      <div class="ns-how-header">
+        <span class="ns-about-label">VOICES</span>
+        <h2 class="ns-about-sec-title">WHAT THE SYSTEM ENABLES</h2>
+        <p class="ns-about-sec-desc">Perspectives from the four pillars of India's justice ecosystem.</p>
+      </div>
+
+      <div class="ns-testi-grid">
+
+        <div class="ns-testi-card">
+          <div class="ns-testi-quote">"</div>
+          <p class="ns-testi-text">Before Nyaya-Setu, we spent weeks preparing Section 65B certificates manually. Now it's generated the moment we upload. Our team can focus on actual investigation.</p>
+          <div class="ns-testi-author">
+            <div class="ns-testi-avatar ns-testi-avatar--c">
+              <svg width="20" height="20" fill="none" stroke="var(--c4)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div class="ns-testi-name">Inspector R. Sharma</div>
+              <div class="ns-testi-role">Cyber Crime Unit, Delhi Police</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ns-testi-card">
+          <div class="ns-testi-quote">"</div>
+          <p class="ns-testi-text">Evidence integrity checks that used to take 3–6 months through the FSL now happen in under a minute. This is the kind of infrastructure the judiciary has been waiting for.</p>
+          <div class="ns-testi-author">
+            <div class="ns-testi-avatar ns-testi-avatar--g">
+              <svg width="20" height="20" fill="none" stroke="var(--e4)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 6l9-4 9 4v6c0 5.25-3.75 10.15-9 11.5C6.75 22.15 3 17.25 3 12V6z"/></svg>
+            </div>
+            <div>
+              <div class="ns-testi-name">Hon. Justice A. Mehta</div>
+              <div class="ns-testi-role">Sessions Court, Mumbai</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ns-testi-card">
+          <div class="ns-testi-quote">"</div>
+          <p class="ns-testi-text">Our lab backlog has always been blamed for delayed justice. With blockchain-anchored hashes, routine authentication is instant — freeing us for complex forensic analysis.</p>
+          <div class="ns-testi-author">
+            <div class="ns-testi-avatar ns-testi-avatar--c">
+              <svg width="20" height="20" fill="none" stroke="var(--c4)" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+            </div>
+            <div>
+              <div class="ns-testi-name">Dr. P. Nair</div>
+              <div class="ns-testi-role">Director, State Forensic Science Lab</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <section class="ns-threats">
+    <div class="ns-threats-inner">
+      <div class="ns-threat-card">
+        <div class="ns-threat-val">5 CR+</div>
+        <div class="ns-threat-lbl">Pending Cases in India</div>
+      </div>
+      <div class="ns-threat-div"></div>
+      <div class="ns-threat-card">
+        <div class="ns-threat-val ns-threat-val--danger">1–30%</div>
+        <div class="ns-threat-lbl">Cybercrime Conviction Rate</div>
+      </div>
+      <div class="ns-threat-div"></div>
+      <div class="ns-threat-card">
+        <div class="ns-threat-val">2+ YRS</div>
+        <div class="ns-threat-lbl">Forensic Lab Backlog</div>
+      </div>
+      <div class="ns-threat-div"></div>
+      <div class="ns-threat-card">
+        <div class="ns-threat-val ns-threat-val--gr">&lt;₹1</div>
+        <div class="ns-threat-lbl">Cost Per Case on Chain</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+/* ── Hero ─────────────────────────────────────── */
+.ns-hero {
+  position: relative; display: flex; align-items: center;
+  justify-content: center; padding: 5rem 1.5rem 3rem;
+  overflow: hidden; text-align: center;
+}
+.ns-hero-glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(90px); }
+.ns-hero-glow--c {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,210,230,.09) 0%, transparent 70%);
+  top: -180px; left: 50%; transform: translateX(-55%);
+}
+.ns-hero-glow--g {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(50,210,130,.07) 0%, transparent 70%);
+  bottom: -80px; right: 8%;
+}
+.ns-hero-inner {
+  position: relative; z-index: 1; max-width: 760px;
+  display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+}
+.ns-hero-badge {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .3rem 1rem; border: 1px solid rgba(0,210,230,.3);
+  border-radius: 2rem; background: rgba(0,210,230,.07);
+  font-family: var(--fd); font-size: .7rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--c4);
+}
+.ns-hero-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--c4); box-shadow: 0 0 6px var(--c4);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.ns-hero-title {
+  font-family: var(--fd); font-weight: 900;
+  font-size: clamp(3rem, 10vw, 6rem);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--txt); line-height: 1;
+}
+.ns-hero-title-sep { color: rgba(0,210,230,.4); margin: 0 .15em; }
+.ns-hero-title-hl { color: var(--c4); text-shadow: 0 0 40px rgba(0,210,230,.45); }
+.ns-hero-sub {
+  font-family: var(--fd); font-size: .75rem; font-weight: 600;
+  letter-spacing: .45em; text-transform: uppercase; color: var(--txt3); margin-top: -.5rem;
+}
+.ns-hero-desc { font-size: 1.1rem; color: var(--txt2); line-height: 1.85; max-width: 580px; }
+.ns-hero-desc em { color: var(--c4); font-style: normal; font-weight: 600; }
+
+/* CTAs — both buttons identical style */
+.ns-hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.ns-cta {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .75rem 2rem; border-radius: .375rem;
+  font-family: var(--fd); font-weight: 700; font-size: .8rem;
+  letter-spacing: .15em; text-transform: uppercase; text-decoration: none;
+  transition: all .25s;
+}
+.ns-cta--primary {
+  background: linear-gradient(135deg, var(--c4), var(--c5));
+  color: var(--bg); box-shadow: 0 4px 18px rgba(34,211,238,.25);
+}
+.ns-cta--primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,211,238,.4); }
+
+/* Hero Stats */
+.ns-hero-stats {
+  display: flex; align-items: center;
+  border: 1px solid rgba(0,210,230,.12); border-radius: .5rem;
+  background: rgba(0,210,230,.03); overflow: hidden; margin-top: .5rem;
+}
+.ns-hero-stat { display: flex; flex-direction: column; align-items: center; padding: 1rem 2rem; gap: .2rem; }
+.ns-hero-stat-div { width: 1px; height: 36px; background: rgba(0,210,230,.18); flex-shrink: 0; }
+.ns-hero-stat-num {
+  font-family: var(--fd); font-size: 1.1rem; font-weight: 800;
+  color: var(--c4); letter-spacing: .08em; text-shadow: 0 0 12px rgba(0,210,230,.3);
+}
+.ns-hero-stat-lbl { font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--txt3); }
+
+/* ── Why Nyaya-Setu ───────────────────────────── */
+.ns-why { padding: 5rem 1.5rem; }
+.ns-why-inner { max-width: 72rem; margin: 0 auto; }
+.ns-why-header { text-align: center; margin-bottom: 3rem; display: flex; flex-direction: column; align-items: center; gap: .75rem; }
+.ns-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+.ns-why-card {
+  background: linear-gradient(135deg, var(--card-c), rgba(12,22,40,.4));
+  border: 1px solid var(--bc); border-radius: .75rem;
+  padding: 2rem 1.75rem;
+  display: flex; flex-direction: column; gap: 1rem;
+  transition: transform .3s, border-color .3s;
+}
+.ns-why-card:hover { transform: translateY(-4px); border-color: rgba(0,210,230,.35); }
+.ns-why-card--solution {
+  background: linear-gradient(135deg, var(--card-g), rgba(8,22,22,.4));
+  border-color: var(--bg2g);
+}
+.ns-why-card--solution:hover { border-color: rgba(50,210,130,.4); }
+
+/* Corruption card */
+.ns-why-card--corrupt {
+  background: linear-gradient(135deg, rgba(30,15,5,.6), rgba(20,10,5,.4));
+  border-color: rgba(245,158,11,.2);
+}
+.ns-why-card--corrupt:hover { border-color: rgba(245,158,11,.45); transform: translateY(-4px); }
+
+.ns-why-icon {
+  width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; border-radius: .5rem;
+}
+.ns-why-icon--danger { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25); }
+.ns-why-icon--gr { background: rgba(50,210,130,.08); border: 1px solid rgba(50,210,130,.25); }
+.ns-why-icon--corrupt { background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.3); }
+
+.ns-why-title {
+  font-family: var(--fd); font-size: 1rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--txt);
+}
+.ns-why-title--gr { color: var(--e4); }
+.ns-why-title--corrupt { color: #f59e0b; }
+.ns-why-desc { font-size: .95rem; color: var(--txt2); line-height: 1.75; }
+.ns-why-desc em { color: var(--e4); font-style: normal; font-weight: 600; }
+.corrupt-em { color: #f59e0b !important; font-style: normal; font-weight: 600; }
+
+.ns-why-corrupt-tag {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .35rem .75rem;
+  background: rgba(50,210,130,.08); border: 1px solid rgba(50,210,130,.25);
+  border-radius: 2rem; font-size: .72rem; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--e4);
+  margin-top: .25rem;
+}
+
+.ns-why-learn-more {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--fd); font-size: .75rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--e4); text-decoration: none;
+  margin-top: .25rem; transition: gap .2s;
+}
+.ns-why-learn-more:hover { gap: .7rem; }
+
+/* ── How It Works ─────────────────────────────── */
+.ns-how { padding: 4rem 1.5rem; }
+.ns-how-inner { max-width: 72rem; margin: 0 auto; }
+.ns-how-header { text-align: center; margin-bottom: 3rem; display: flex; flex-direction: column; align-items: center; gap: .75rem; }
+.ns-steps { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.ns-step {
+  flex: 1; min-width: 200px; max-width: 280px;
+  background: linear-gradient(135deg, var(--card-c), rgba(12,22,40,.4));
+  border: 1px solid var(--bc); border-radius: .75rem;
+  padding: 2rem 1.5rem; position: relative;
+  transition: transform .3s, border-color .3s;
+}
+.ns-step:hover { transform: translateY(-4px); border-color: rgba(0,210,230,.35); }
+.ns-step-num {
+  font-family: var(--fd); font-size: 3.5rem; font-weight: 900;
+  color: rgba(0,210,230,.07); position: absolute; top: .5rem; right: 1rem; line-height: 1;
+}
+.ns-step-body { display: flex; flex-direction: column; gap: .75rem; position: relative; z-index: 1; }
+.ns-step-icon {
+  width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(0,210,230,.25); border-radius: .375rem; background: rgba(0,210,230,.05);
+}
+.ns-step-title { font-family: var(--fd); font-size: .85rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--txt); }
+.ns-step-desc { font-size: .9rem; color: var(--txt2); line-height: 1.7; }
+.ns-step-arrow { flex-shrink: 0; opacity: .6; }
+
+/* ── Testimonials ─────────────────────────────── */
+.ns-testi { padding: 5rem 1.5rem; }
+.ns-testi-inner { max-width: 72rem; margin: 0 auto; }
+.ns-testi-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.75rem; margin-top: 3rem;
+}
+.ns-testi-card {
+  position: relative;
+  background: linear-gradient(135deg, var(--card-c), rgba(12,22,40,.4));
+  border: 1px solid var(--bc); border-radius: .75rem;
+  padding: 2.25rem 2rem 1.75rem;
+  display: flex; flex-direction: column; gap: 1.25rem;
+  transition: transform .3s, border-color .3s; overflow: hidden;
+}
+.ns-testi-card:hover { transform: translateY(-4px); border-color: rgba(0,210,230,.35); }
+.ns-testi-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,210,230,.4), transparent);
+}
+.ns-testi-quote {
+  font-family: Georgia, serif; font-size: 5rem; font-weight: 700; line-height: .8;
+  color: rgba(0,210,230,.15); position: absolute; top: 1rem; right: 1.5rem;
+}
+.ns-testi-text { font-size: 1rem; color: var(--txt2); line-height: 1.8; position: relative; z-index: 1; }
+.ns-testi-author { display: flex; align-items: center; gap: .875rem; }
+.ns-testi-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.ns-testi-avatar--c { background: rgba(0,210,230,.08); border: 1px solid rgba(0,210,230,.25); }
+.ns-testi-avatar--g { background: rgba(50,210,130,.08); border: 1px solid rgba(50,210,130,.25); }
+.ns-testi-name { font-family: var(--fd); font-size: .85rem; font-weight: 700; letter-spacing: .08em; color: var(--txt); }
+.ns-testi-role { font-size: .78rem; color: var(--txt3); margin-top: .15rem; }
+
+/* ── Stats Bar ────────────────────────────────── */
+.ns-threats { padding: 2rem 1.5rem 4rem; }
+.ns-threats-inner {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  max-width: 72rem; margin: 0 auto;
+  border: 1px solid rgba(0,210,230,.1); border-radius: .5rem;
+  background: rgba(0,0,0,.2); overflow: hidden;
+}
+.ns-threat-card { display: flex; flex-direction: column; align-items: center; padding: 1.5rem 2.5rem; gap: .3rem; flex: 1; min-width: 160px; }
+.ns-threat-div { width: 1px; height: 50px; background: rgba(0,210,230,.12); flex-shrink: 0; }
+.ns-threat-val {
+  font-family: var(--fd); font-size: 1.6rem; font-weight: 900;
+  color: var(--c4); letter-spacing: .05em; text-shadow: 0 0 16px rgba(0,210,230,.35);
+}
+.ns-threat-val--danger { color: var(--danger); text-shadow: 0 0 16px rgba(239,68,68,.35); }
+.ns-threat-val--gr { color: var(--e4); text-shadow: 0 0 16px rgba(50,210,130,.35); }
+.ns-threat-lbl { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--txt3); text-align: center; }
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+  .ns-step-arrow { transform: rotate(90deg); }
+  .ns-steps { flex-direction: column; align-items: center; }
+  .ns-step { max-width: 100%; width: 100%; }
+  .ns-why-grid { grid-template-columns: 1fr; }
+  .ns-testi-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .ns-hero-stats { flex-direction: column; }
+  .ns-hero-stat-div { width: 80%; height: 1px; }
+  .ns-threats-inner { flex-direction: column; }
+  .ns-threat-div { width: 80%; height: 1px; }
+}
+</style>
+
+<script>
+(function () {
+  const container = document.getElementById('stars');
+  if (!container) return;
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'ns-star';
+    s.style.cssText = `
+      left:${Math.random() * 100}%;
+      top:${Math.random() * 100}%;
+      animation-delay:${Math.random() * 4}s;
+      animation-duration:${2 + Math.random() * 4}s;
+      opacity:${.1 + Math.random() * .3};
+      width:${Math.random() < .15 ? 3 : 2}px;
+      height:${Math.random() < .15 ? 3 : 2}px;
+    `;
+    container.appendChild(s);
+  }
+})();
+</script>

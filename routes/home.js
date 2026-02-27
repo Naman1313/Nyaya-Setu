@@ -10,8 +10,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/home', (req, res) => {
-  res.render('index');
+  res.render('home');
 });
+router.get('/dashboard',(req,res)=>{
+  res.render('index');
+})
 
 // ABOUT
 router.get('/about', (req, res) => {

@@ -10,7 +10,7 @@ import pinataSDK from '@pinata/sdk';
 import AWS from 'aws-sdk'; 
 import Evidence from '../models/evidence.js';
 import { Readable } from 'stream';
-import { isloggedin } from '../../middleware.js';
+import { isloggedin } from '../middleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
